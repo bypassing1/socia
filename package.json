@@ -1,11 +1,7 @@
 {
-  "name": "sociabuzz-roblox-middleware",
+  "name": "sociabuzz-roblox-vercel",
   "version": "1.0.0",
-  "description": "Middleware to handle SociaBuzz webhooks and deliver donations to Roblox",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "description": "SociaBuzz to Roblox Serverless Middleware for Vercel",
   "dependencies": {
     "express": "^4.19.2"
   }

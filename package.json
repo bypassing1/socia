@@ -1,12 +1,12 @@
 {
-  "name": "sociabuzz-roblox-proxy",
+  "name": "sociabuzz-roblox-middleware",
   "version": "1.0.0",
-  "description": "SociaBuzz to Roblox Studio Webhook Proxy Server",
-  "main": "index.js",
+  "description": "Middleware to handle SociaBuzz webhooks and deliver donations to Roblox",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.19.2"
   }
 }

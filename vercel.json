@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/webhook/sociabuzz",
+      "destination": "/api/sociabuzz"
+    },
+    {
+      "source": "/api/donations",
+      "destination": "/api/donations"
+    }
+  ]
+}

@@ -6,7 +6,8 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const clientSecret = req.headers['x-roblox-secret'];
+  // Check secret from header OR query parameter (?secret=YOUR_KEY)
+  const clientSecret = req.headers['x-roblox-secret'] || req.query.secret;
 
   if (clientSecret !== ROBLOX_SECRET) {
     return res.status(401).json({ error: "Unauthorized" });

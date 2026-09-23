@@ -1,4 +1,6 @@
-const store = require('./_store');
+const { Redis } = require('@upstash/redis');
+
+const redis = Redis.fromEnv();
 const ROBLOX_SECRET = process.env.ROBLOX_SECRET || "a8f9c2d1-4e7a-4b9e";
 
 module.exports = async (req, res) => {
@@ -6,16 +8,21 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Check secret from header OR query parameter (?secret=YOUR_KEY)
   const clientSecret = req.headers['x-roblox-secret'] || req.query.secret;
 
   if (clientSecret !== ROBLOX_SECRET) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // Drain store queue
-  const currentDonations = [...store];
-  store.length = 0; 
+  // Retrieve all items stored in Redis
+  const rawDonations = await redis.lrange('donations', 0, -1);
+  
+  // Clear the list once retrieved so items aren't processed twice
+  if (rawDonations.length > 0) {
+    await redis.del('donations');
+  }
 
-  return res.status(200).json({ success: true, donations: currentDonations });
+  const donations = rawDonations.map(item => (typeof item === 'string' ? JSON.parse(item) : item));
+
+  return res.status(200).json({ success: true, donations });
 };

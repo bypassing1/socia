@@ -1,4 +1,7 @@
-const store = require('./_store');
+const { Redis } = require('@upstash/redis');
+
+// Automatically connects using Vercel environment variables
+const redis = Redis.fromEnv();
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -7,8 +10,7 @@ module.exports = async (req, res) => {
 
   const body = req.body || {};
 
-  // Extract fields handling various SociaBuzz payload formats
-  const donorName = body.supporter_name || body.name || body.display_name || "Anonymous Donor";
+  const donorName = body.supporter_name || body.name || body.display_name || "Anonymous";
   const donationAmount = body.amount || body.nominal || body.amount_raw || 0;
   const donationMessage = body.message || body.comment || "No message";
 
@@ -20,8 +22,9 @@ module.exports = async (req, res) => {
     timestamp: new Date().toISOString()
   };
 
-  store.push(donation);
-  console.log("Received payload:", body);
+  // Push item into a persistent Redis list named "donations"
+  await redis.rpush('donations', JSON.stringify(donation));
+  console.log("Saved donation to Redis:", donation);
 
   return res.status(200).send("OK");
 };
